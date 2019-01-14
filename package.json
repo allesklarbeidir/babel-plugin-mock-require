@@ -1,11 +1,15 @@
 {
   "name": "babel-plugin-mock-require",
   "version": "1.0.0",
-  "description": "",
+  "description": "Replaces require with a call to a specified module which is supposed to return the required module or a mocked version of it.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Sebastian Jerratsch <sebastian.jerratsch@gmail.com> (https://github.com/allesklarbeidir)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/allesklarbeidir/babel-plugin-mock-require.git"
+  }
 }

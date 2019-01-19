@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-mock-require",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Replaces require with a call to a specified module which is supposed to return the required module or a mocked version of it.",
   "main": "index.js",
   "scripts": {

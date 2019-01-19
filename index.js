@@ -23,7 +23,7 @@ exports = module.exports = function({ types: t }) {
                                 state.opts.ignoreModules && state.opts.ignoreModules.length &&
                                 args.length === 1 &&
                                 t.isStringLiteral(args[0]) &&
-                                state.opts.ignoreModules.indexOf(args[0]) !== -1
+                                state.opts.ignoreModules.indexOf(args[0].value) !== -1
                             )
                         ){
                             path.skip();

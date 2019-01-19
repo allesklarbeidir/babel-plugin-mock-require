@@ -7,48 +7,57 @@ exports = module.exports = function({ types: t }) {
             CallExpression:{
                 exit(path, state){
                     const args = path.node.arguments || [];
+                    
                     if(
-                        path.node.callee.name === "require" &&
-                        !(
-                            path.node.leadingComments &&
-                            path.node.leadingComments.length &&
-                            path.node.leadingComments.filter(
-                                c => c.type === "CommentBlock" && c.value === "@babel-plugin-mock-require ignore"
-                            ).length > 0
-                        ) &&
-                        !(
-                            state.opts.ignoreModules && state.opts.ignoreModules.length &&
-                            path.node.arguments && path.node.arguments.length === 1 &&
-                            t.isStringLiteral(path.node.arguments[0]) &&
-                            state.opts.ignoreModules.indexOf(path.node.arguments[0]) !== -1
-                        )
+                        path.node.callee.name === "require"
                     ){
-                        path.replaceWith(
-                            t.callExpression(
-                                t.memberExpression(
-                                    t.callExpression(
-                                        t.identifier("require"),
-                                        [t.stringLiteral("babel-plugin-mock-require")]
-                                    ),
-                                    t.identifier("requireHook")
-                                ),
-                                [
-                                    t.stringLiteral(JSON.stringify(state.opts)),
-                                    t.identifier("__dirname"),
-                                    t.functionExpression(
-                                        null,
-                                        [t.identifier("require")],
-                                        t.blockStatement(
-                                            [
-                                                t.returnStatement(t.callExpression(t.identifier("require"), path.node.arguments))
-                                            ],
-                                            []
-                                        )
-                                    )
-                                ]
+                        if(
+                            (
+                                path.node.leadingComments &&
+                                path.node.leadingComments.length &&
+                                path.node.leadingComments.filter(
+                                    c => c.type === "CommentBlock" && c.value === "@babel-plugin-mock-require ignore"
+                                ).length > 0
+                            ) ||
+                            (
+                                state.opts.ignoreModules && state.opts.ignoreModules.length &&
+                                args.length === 1 &&
+                                t.isStringLiteral(args[0]) &&
+                                state.opts.ignoreModules.indexOf(args[0]) !== -1
                             )
-                        );
-                        path.skip();
+                        ){
+                            path.skip();
+                        }
+                        else
+                        {
+                            path.replaceWith(
+                                t.callExpression(
+                                    t.memberExpression(
+                                        t.callExpression(
+                                            t.identifier("require"),
+                                            [t.stringLiteral("babel-plugin-mock-require")]
+                                        ),
+                                        t.identifier("requireHook")
+                                    ),
+                                    [
+                                        t.stringLiteral(JSON.stringify(state.opts)),
+                                        t.identifier("__dirname"),
+                                        t.functionExpression(
+                                            null,
+                                            [t.identifier("require")],
+                                            t.blockStatement(
+                                                [
+                                                    t.returnStatement(t.callExpression(t.identifier("require"), path.node.arguments))
+                                                ],
+                                                []
+                                            )
+                                        )
+                                    ]
+                                )
+                            );
+                            path.skip();
+                        }
+
                     }
                 }
             }

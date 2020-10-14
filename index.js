@@ -81,11 +81,12 @@ exports.requireHook = function(_opts, from, requireCallback) {
         }
     }
 
-    const doRequire = function(str){
+    const doRequire = function(){
+        const str = arguments[0];
         if(str && str.length > 0 && [".", "/"].indexOf(str[0]) !== -1){
-            return moduleMocker(path.resolve(from, str));
+            return moduleMocker.apply(null, [path.resolve(from, str)].concat([...arguments].slice(1)));
         }
-        return moduleMocker(str);
+        return moduleMocker.apply(null, [str].concat([...arguments].slice(1)));
     };
     return requireCallback(doRequire);
 };
